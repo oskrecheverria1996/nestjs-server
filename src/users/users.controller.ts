@@ -2,14 +2,22 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('users') // https://localhost:3000/users --> min: 17:44 https://www.youtube.com/watch?v=lonpW-0EybY&list=PL_WGMLcL4jzWCFea1NUVOfaf4IqIMFN4P
+@ApiTags('auth')
+@Controller('auth') // https://localhost:3000/users --> min: 17:44 https://www.youtube.com/watch?v=lonpW-0EybY&list=PL_WGMLcL4jzWCFea1NUVOfaf4IqIMFN4P
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('/register')
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Post('/login')
+  login(@Body() loginUserDto: LoginUserDto) {
+    return this.usersService.login(loginUserDto);
   }
 
   @Get()
