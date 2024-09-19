@@ -12,6 +12,12 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
 
+  // Only to allow localhost frontend
+  app.enableCors({
+    origin: ['http://localhost:4200'],
+    credentials: true
+  });
+
   /**
    * Swagger OpenApi Configuration 
    */

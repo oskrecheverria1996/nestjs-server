@@ -18,7 +18,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const existUser = await this.userModel.findOne({email: createUserDto.email });
-    if(existUser) throw new BadRequestException('Este email ya se encuentra registrado'); 
+    if(existUser) throw new BadRequestException('Este email ya se encuentra registrado');
 
     const { password, ...userData } = createUserDto;
     const user = new this.userModel({
@@ -37,10 +37,10 @@ export class UsersService {
     const isMatch = bcryptAdapter.compare(loginUserDto.password, user.password);
     if(!isMatch) throw new BadRequestException('La contraseña no es valida');
 
-    const payload = { id: user.id, email: user.email, name: user.name };
-    const token = await this.jwtService.sign(payload);
+    const { password, ...userEntity } = user.toJSON();
+    const token = await this.jwtService.sign({ id: user.id, email: user.email, name: user.name });
 
-    return { user, token };
+    return { userEntity, token };
 
   }
 
@@ -50,6 +50,12 @@ export class UsersService {
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
+  }
+
+  async findUserById(id: number) {
+    const user = await this.userModel.findById( id );
+    const { password, ...rest } = user.toJSON();
+    return rest;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
