@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 import { UsersService } from "../../users.service";
+import { jwtConstants } from 'src/users/constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -23,12 +24,12 @@ export class AuthGuard implements CanActivate {
 
     try {
       const payload = await this.jwtService.verifyAsync<any>(
-        token, { secret: process.env.JWT_SEED }
+        token, { secret: jwtConstants.secret }
       );
         
       const user = await this.authService.findUserById( payload.id );
       if ( !user ) throw new UnauthorizedException('User does not exists');
-      if ( !user.emailValidated ) throw new UnauthorizedException('User is not active');
+      // if ( !user.emailValidated ) throw new UnauthorizedException('User is not active');
       
       request['user'] = user;
       

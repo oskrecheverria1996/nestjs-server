@@ -14,6 +14,12 @@ import { ProductsModule } from './products/products.module';
     ProductsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuard,
+    // },
+  ],
 })
 export class AppModule {}

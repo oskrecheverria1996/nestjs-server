@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -35,10 +35,10 @@ export class UsersService {
     if(!user) throw new BadRequestException('El usuario no existe');
 
     const isMatch = bcryptAdapter.compare(loginUserDto.password, user.password);
-    if(!isMatch) throw new BadRequestException('La contraseña no es valida');
+    if(!isMatch) throw new UnauthorizedException('La contraseña no es valida');
 
     const { password, ...userEntity } = user.toJSON();
-    const token = await this.jwtService.sign({ id: user.id, email: user.email, name: user.name });
+    const token = await this.jwtService.signAsync({ id: user.id, email: user.email, name: user.name });
 
     return { userEntity, token };
 
