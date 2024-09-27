@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { Product, ProductDocument } from './entities/product.schema';
 import { PageService } from 'src/shared/page/page.service';
 import { JwtService } from '@nestjs/jwt';
+import { PaginationDto } from 'src/shared/dto/pagination.dto';
 
 @Injectable()
 export class ProductsService {
@@ -29,15 +30,18 @@ export class ProductsService {
     return product;
   }
 
-  async findAll(page, limit) {
+  async findAll(paginationDto: PaginationDto) {
+
+    const { page = 1, limit = 10 } = paginationDto;
 
     try {
-        const [total, products] = await Promise.all([
-          this.productModel.countDocuments(),
 
-          this.productModel.find()
-          .skip( (page - 1) * limit )
-          .limit(limit)
+      const [total, products] = await Promise.all([
+        this.productModel.countDocuments(),
+
+        this.productModel.find()
+        .skip( (page - 1) * limit )
+        .limit(limit)
       ]);
 
       return {
@@ -57,15 +61,42 @@ export class ProductsService {
 
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string) {
+
+    const product = await this.productModel.findById(id);
+    if(!product) throw new NotFoundException(`Producto con el id: ${id} no fue encontrado`);
+
+    return product
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    
+    const product = await this.findOne(id);
+
+    try {
+      await product.updateOne(updateProductDto);
+      return {
+        ...product.toJSON(),
+        ...updateProductDto
+      };
+      
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    
+    await this.findOne(id);
+
+    try {
+      
+      await this.productModel.deleteOne({ _id: id })
+      return `Product with id:${id} was removed`;
+
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+
   }
 }
