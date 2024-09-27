@@ -20,6 +20,9 @@ export class User {
   @Prop({ required: [true, 'Email is required'], unique: true })
   email: string;
 
+  @Prop()
+  isActive: boolean;
+
   @Prop({ default: false })
   emailValidated: boolean;
 

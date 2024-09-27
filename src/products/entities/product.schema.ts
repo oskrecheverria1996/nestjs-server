@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { User } from "../../users/schemas/user.schema";
 
 export type ProductDocument = HydratedDocument<Product>;
 
@@ -14,6 +15,20 @@ export type ProductDocument = HydratedDocument<Product>;
     },
   })
 export class Product {
+    @Prop({required: [true, 'Name is required'], unique: true})
+    name: string;
+  
+    @Prop()
+    available: boolean;
+  
+    @Prop({ default: 0 })
+    price: number;
+  
+    @Prop()
+    description: string;
+  
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+    user: string;
   
 }
 

@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from "@nestjs/mongoose";
 import { ProductsModule } from './products/products.module';
+import { PageService } from './shared/page/page.service';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ProductsModule } from './products/products.module';
   controllers: [AppController],
   providers: [
     AppService,
+    PageService,
     // {
     //   provide: APP_GUARD,
     //   useClass: AuthGuard,
