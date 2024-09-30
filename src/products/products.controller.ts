@@ -3,10 +3,12 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '../users/guards/auth/auth.guard';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOkResponse, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { PaginationDto } from 'src/shared/dto/pagination.dto';
+import { Product } from './entities/product.schema';
+import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
 
-@ApiTags('Products')
+@ApiTags('products')
 @UseGuards(AuthGuard)
 @Controller('products')
 export class ProductsController {
@@ -17,8 +19,15 @@ export class ProductsController {
     return this.productsService.create(createProductDto, auth);
   }
 
+  @ApiExtraModels(PaginatedResponseDto)
+  @ApiResponse({
+    description: 'The product records',
+    schema: {
+      $ref: getSchemaPath(PaginatedResponseDto)
+    }
+  })
   @Get()
-  findAll(@Query() paginationDto: PaginationDto) {
+  findAll(@Query() paginationDto: PaginationDto): Promise<PaginatedResponseDto<Product>> {
     return this.productsService.findAll(paginationDto);
   }
 

@@ -27,7 +27,7 @@ export class User {
   emailValidated: boolean;
 
   @Prop({ required: [true, 'Password is required'] })
-  password: string;
+  password?: string;
 
   @Prop()
   img: string;

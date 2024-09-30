@@ -7,6 +7,7 @@ import { Product, ProductDocument } from './entities/product.schema';
 import { PageService } from 'src/shared/page/page.service';
 import { JwtService } from '@nestjs/jwt';
 import { PaginationDto } from 'src/shared/dto/pagination.dto';
+import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
 
 @Injectable()
 export class ProductsService {
@@ -30,7 +31,7 @@ export class ProductsService {
     return product;
   }
 
-  async findAll(paginationDto: PaginationDto) {
+  async findAll(paginationDto: PaginationDto): Promise<PaginatedResponseDto<Product>> {
 
     const { page = 1, limit = 10 } = paginationDto;
 

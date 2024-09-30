@@ -7,6 +7,7 @@ import { Model } from 'mongoose';
 import { LoginUserDto } from './dto/login-user.dto';
 import { bcryptAdapter } from 'src/config';
 import { JwtService } from "@nestjs/jwt";
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -30,7 +31,7 @@ export class UsersService {
     return user;
   }
 
-  async login(loginUserDto: LoginUserDto) {
+  async login(loginUserDto: LoginUserDto): Promise<LoginResponseDto> {
     const user = await this.userModel.findOne({ email: loginUserDto.email });
     if(!user) throw new BadRequestException('El usuario no existe');
 
@@ -40,7 +41,7 @@ export class UsersService {
     const { password, ...userEntity } = user.toJSON();
     const token = await this.jwtService.signAsync({ id: user.id, email: user.email, name: user.name });
 
-    return { userEntity, token };
+    return { user: userEntity, token };
 
   }
 
