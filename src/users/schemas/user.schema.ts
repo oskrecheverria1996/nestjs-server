@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import { HydratedDocument } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
@@ -14,24 +15,33 @@ export type UserDocument = HydratedDocument<User>;
     },
   })
 export class User {
+
+  
+  @ApiProperty()
   @Prop({required: [true, 'Name is required']})
   name: string;
 
+  @ApiProperty()
   @Prop({ required: [true, 'Email is required'], unique: true })
   email: string;
 
+  @ApiProperty()
   @Prop()
   isActive: boolean;
 
+  @ApiProperty()
   @Prop({ default: false })
   emailValidated: boolean;
 
+  @ApiProperty()
   @Prop({ required: [true, 'Password is required'] })
   password?: string;
 
+  @ApiProperty()
   @Prop()
   img: string;
 
+  @ApiProperty()
   @Prop({ default: ['USER_ROLE'] })
   role: [string];
 }

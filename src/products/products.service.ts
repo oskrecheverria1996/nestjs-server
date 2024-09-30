@@ -16,7 +16,7 @@ export class ProductsService {
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
     private jwtService: JwtService) {}
 
-  async create(createProductDto: CreateProductDto, user: string) {
+  async create(createProductDto: CreateProductDto, user: string): Promise<Product> {
     const existProduct = await this.productModel.findOne({name: createProductDto.name });
     if(existProduct) throw new BadRequestException('Un producto con este nombre ya se encuentra registrado');
 
@@ -62,7 +62,7 @@ export class ProductsService {
 
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<any> {
 
     const product = await this.productModel.findById(id);
     if(!product) throw new NotFoundException(`Producto con el id: ${id} no fue encontrado`);
@@ -86,7 +86,7 @@ export class ProductsService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<string> {
     
     await this.findOne(id);
 

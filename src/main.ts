@@ -29,7 +29,9 @@ async function bootstrap() {
   .addTag('auth')
   .addTag('products')
   .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    // extraModels: [] // Agregar models para api
+  });
   SwaggerModule.setup('api', app, document);
 
   await app.listen(configService.get('PORT'));
