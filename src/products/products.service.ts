@@ -86,14 +86,14 @@ export class ProductsService {
     }
   }
 
-  async remove(id: string): Promise<string> {
+  async remove(id: string): Promise<{message: string}> {
     
     await this.findOne(id);
 
     try {
       
       await this.productModel.deleteOne({ _id: id })
-      return `Product with id:${id} was removed`;
+      return { message: `Product with id: ${id} was removed`};
 
     } catch (error) {
       throw new InternalServerErrorException();

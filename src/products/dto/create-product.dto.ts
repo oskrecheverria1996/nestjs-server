@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import { IsNotEmpty, IsNumber } from "class-validator";
 
 export class CreateProductDto {
@@ -9,7 +10,8 @@ export class CreateProductDto {
   
     @ApiProperty()
     @IsNotEmpty({ message: 'Debe tener un precio' })
-    @IsNumber({}, { message: 'Debe tener un preciov alido' })
+    @IsNumber({}, { message: 'Debe tener un precio valido' })
+    @Type( () => Number ) // enableImplicitConversions: true
     price: number;
 
     @ApiProperty()

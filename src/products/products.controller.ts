@@ -65,11 +65,11 @@ export class ProductsController {
   @ApiResponse({
     description: 'Delete a product',
     schema: {
-      type: 'string'
+      type: 'object'
     }
   })
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<string> {
+  remove(@Param('id') id: string): Promise<{message: string}> {
     return this.productsService.remove(id);
   }
 }
