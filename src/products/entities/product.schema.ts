@@ -11,7 +11,6 @@ export type ProductDocument = HydratedDocument<Product>;
         versionKey: false,
         transform: function(doc, ret, options) {
             delete ret._id;
-            delete ret.password;
         },
     },
   })
@@ -36,6 +35,10 @@ export class Product {
     @ApiProperty()
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     user: string;
+
+    @ApiProperty()
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Category' })
+    category: string;
   
 }
 

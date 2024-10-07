@@ -16,4 +16,8 @@ export class PaginationDto {
     @Min(0)
     @Type( () => Number ) // enableImplicitConversions: true
     page?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    search?: string
 }

@@ -33,14 +33,15 @@ export class ProductsService {
 
   async findAll(paginationDto: PaginationDto): Promise<PaginatedResponseDto<Product>> {
 
-    const { page = 1, limit = 10 } = paginationDto;
+    const { page = 1, limit = 10, search = '{}' } = paginationDto;
 
+    let query = JSON.parse(search)
     try {
 
       const [total, products] = await Promise.all([
         this.productModel.countDocuments(),
 
-        this.productModel.find()
+        this.productModel.find(query)
         .skip( (page - 1) * limit )
         .limit(limit)
       ]);

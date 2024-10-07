@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from "@nestjs/mongoose";
 import { ProductsModule } from './products/products.module';
 import { PageService } from './shared/page/page.service';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { PageService } from './shared/page/page.service';
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL),
     ProductsModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [
