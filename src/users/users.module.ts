@@ -6,6 +6,7 @@ import { User, UserSchema } from "./schemas/user.schema";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule } from '@nestjs/config';
 import { env } from 'process';
+import { EmailService } from './email.service';
 
 @Module({
   imports: [
@@ -23,7 +24,10 @@ import { env } from 'process';
     })
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [
+    UsersService,
+    EmailService
+  ],
   exports: [UsersService]
 })
 export class UsersModule {}

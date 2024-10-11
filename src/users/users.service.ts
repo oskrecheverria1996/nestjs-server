@@ -8,13 +8,15 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { bcryptAdapter } from 'src/config';
 import { JwtService } from "@nestjs/jwt";
 import { LoginResponseDto } from './dto/login-response.dto';
+import { EmailService } from './email.service';
 
 @Injectable()
 export class UsersService {
 
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private emailService: EmailService
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -27,6 +29,9 @@ export class UsersService {
       ...userData
     });
 
+    // Email de confirmacion
+    await this.sendEmailValidationLink(user.email);
+
     await user.save();
     return user;
   }
@@ -37,6 +42,8 @@ export class UsersService {
 
     const isMatch = bcryptAdapter.compare(loginUserDto.password, user.password);
     if(!isMatch) throw new UnauthorizedException('La contraseña no es valida');
+
+    if(!user.emailValidated) throw new BadRequestException('Por favor valide primero el email');
 
     const { password, ...userEntity } = user.toJSON();
     const token = await this.jwtService.signAsync({ id: user.id, email: user.email, name: user.name });
@@ -64,8 +71,54 @@ export class UsersService {
     return updatedUser;
   }
 
+  async validatePassword(user, password: string) {
+    const isMatch = bcryptAdapter.compare(password, user.password);
+    if(!isMatch) throw new UnauthorizedException('La contraseña no es valida');
+  }
+
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+  
+  private async sendEmailValidationLink (email: string) {
+    const token = await this.jwtService.signAsync({email});
+    if(!token) throw new InternalServerErrorException('Error getting token');
+
+    const link = `${process.env.WEBSERVICE_URL}/auth/validate-email/${token}`;
+    const html = `
+        <h1>Validate your email</h1>
+        <p>Click on the following link to validate your email</p>
+        <a href="${link}">Validate your email: ${email}</a>
+    `;
+
+    const options = {
+        to: email,
+        subject: 'Validate your email',
+        htmlBody: html
+    }
+
+    const isSent = await this.emailService.sendEmail(options);
+    if(!isSent) throw new InternalServerErrorException('Error sending email');
+
+    return true;
+  }
+
+  
+  async validateEmail(token: string): Promise<boolean> {
+
+    const payload = await this.jwtService.verify(token);
+    if(!payload) throw new UnauthorizedException('Invalid token');
+
+    const { email } = payload as { email: string }; // min: 3:52 --> https://www.udemy.com/course/nodejs-de-cero-a-experto/learn/lecture/39797466#content 
+    if( !email ) throw new InternalServerErrorException('Email not in token');
+
+    const user = await this.userModel.findOne({email});
+    if(!user) throw new InternalServerErrorException('Email not exist');
+
+    user.emailValidated = true;
+    await user.save();
+
+    return true;
+}
 
 }

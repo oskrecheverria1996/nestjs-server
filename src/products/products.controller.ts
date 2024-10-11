@@ -3,14 +3,24 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '../users/guards/auth/auth.guard';
-import { ApiExtraModels, ApiOkResponse, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiResponse, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from '@nestjs/swagger';
 import { PaginationDto } from 'src/shared/dto/pagination.dto';
 import { Product } from './entities/product.schema';
 import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
+import { ErrorResponseDto } from 'src/shared/dto/error-response.dto';
 
 @ApiTags('products')
-@ApiExtraModels(PaginatedResponseDto)
-@ApiExtraModels(Product)
+@ApiExtraModels(PaginatedResponseDto, ErrorResponseDto, Product)
+@ApiBadRequestResponse({
+  schema: {
+    $ref: getSchemaPath(ErrorResponseDto)
+  }
+})
+@ApiUnauthorizedResponse({
+  schema: {
+    $ref: getSchemaPath(ErrorResponseDto)
+  }
+})
 @UseGuards(AuthGuard)
 @Controller('products')
 export class ProductsController {

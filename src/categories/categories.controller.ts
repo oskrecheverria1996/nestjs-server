@@ -5,12 +5,22 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PaginationDto } from 'src/shared/dto/pagination.dto';
 import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
 import { Category } from './entities/category.entity';
-import { ApiExtraModels, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiResponse, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from '@nestjs/swagger';
 import { AuthGuard } from 'src/users/guards/auth/auth.guard';
+import { ErrorResponseDto } from 'src/shared/dto/error-response.dto';
 
 @ApiTags('categories')
-@ApiExtraModels(PaginatedResponseDto)
-@ApiExtraModels(Category)
+@ApiExtraModels(PaginatedResponseDto, ErrorResponseDto, Category)
+@ApiBadRequestResponse({
+  schema: {
+    $ref: getSchemaPath(ErrorResponseDto)
+  }
+})
+@ApiUnauthorizedResponse({
+  schema: {
+    $ref: getSchemaPath(ErrorResponseDto)
+  }
+})
 @UseGuards(AuthGuard)
 @Controller('categories')
 export class CategoriesController {
@@ -28,7 +38,7 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
-  @ApiResponse({
+  @ApiOkResponse({
     description: 'The category records',
     schema: {
       $ref: getSchemaPath(PaginatedResponseDto)
@@ -39,7 +49,7 @@ export class CategoriesController {
     return this.categoriesService.findAll(paginationDto);
   }
 
-  @ApiResponse({
+  @ApiOkResponse({
     description: 'Get a product',
     schema: {
       $ref: getSchemaPath(Category)
@@ -50,7 +60,7 @@ export class CategoriesController {
     return this.categoriesService.findOne(id);
   }
 
-  @ApiResponse({
+  @ApiOkResponse({
     description: 'Get a product',
     schema: {
       type: 'object'
@@ -61,7 +71,7 @@ export class CategoriesController {
     return this.categoriesService.update(id, updateCategoryDto);
   }
      
-  @ApiResponse({
+  @ApiOkResponse({
     description: 'Delete a product',
     schema: {
       type: 'object'
