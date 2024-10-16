@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -22,8 +22,8 @@ import { ErrorResponseDto } from 'src/shared/dto/error-response.dto';
 })
 @ApiTags('auth')
 @Controller('auth') // https://localhost:3000/users --> min: 17:44 https://www.youtube.com/watch?v=lonpW-0EybY&list=PL_WGMLcL4jzWCFea1NUVOfaf4IqIMFN4P
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
 
   
   @ApiExtraModels(LoginResponseDto)
@@ -35,7 +35,7 @@ export class UsersController {
   })
   @Post('/register')
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.authService.create(createUserDto);
   }
 
   @ApiOkResponse({
@@ -46,17 +46,17 @@ export class UsersController {
   })
   @Post('/login')
   login(@Body() loginUserDto: LoginUserDto): Promise<LoginResponseDto> {
-    return this.usersService.login(loginUserDto);
+    return this.authService.login(loginUserDto);
   }
 
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.authService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return this.authService.findOne(+id);
   }
 
   
@@ -69,16 +69,16 @@ export class UsersController {
   })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+    return this.authService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.authService.remove(+id);
   }
 
   @Get('/validate-email/:token')
   validateEmail(@Param('token') token: string): Promise<boolean> {
-    return this.usersService.validateEmail(token)
+    return this.authService.validateEmail(token)
   }
 }

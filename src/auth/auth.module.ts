@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from "./schemas/user.schema";
 import { JwtModule } from "@nestjs/jwt";
@@ -23,11 +23,11 @@ import { EmailService } from './email.service';
       signOptions: { expiresIn: '6h' },
     })
   ],
-  controllers: [UsersController],
+  controllers: [AuthController],
   providers: [
-    UsersService,
+    AuthService,
     EmailService
   ],
-  exports: [UsersService]
+  exports: [AuthService]
 })
-export class UsersModule {}
+export class AuthModule {}

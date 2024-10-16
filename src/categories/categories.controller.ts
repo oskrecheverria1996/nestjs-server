@@ -6,7 +6,7 @@ import { PaginationDto } from 'src/shared/dto/pagination.dto';
 import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
 import { Category } from './entities/category.entity';
 import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiResponse, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from '@nestjs/swagger';
-import { AuthGuard } from 'src/users/guards/auth/auth.guard';
+import { AuthGuard } from 'src/auth/guards/auth/auth.guard';
 import { ErrorResponseDto } from 'src/shared/dto/error-response.dto';
 
 @ApiTags('categories')

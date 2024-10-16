@@ -11,7 +11,7 @@ import { LoginResponseDto } from './dto/login-response.dto';
 import { EmailService } from './email.service';
 
 @Injectable()
-export class UsersService {
+export class AuthService {
 
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,

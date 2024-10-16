@@ -3,11 +3,11 @@ import { CategoriesService } from './categories.service';
 import { CategoriesController } from './categories.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Category, CategorySchema } from './entities/category.entity';
-import { UsersModule } from 'src/users/users.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
-    UsersModule,
+    AuthModule,
     MongooseModule.forFeature([
       {
         name: Category.name,
