@@ -23,7 +23,7 @@ pipeline {
     stages {
         stage("Clonando repositorio"){
             steps {
-                git branch: "master", credentialsId: "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", url: "https://github.com/oskrecheverria1996/nestjs-server"
+                git "https://github.com/oskrecheverria1996/nestjs-server.git"
             }
         }
         stage("Instalando dependencias"){
