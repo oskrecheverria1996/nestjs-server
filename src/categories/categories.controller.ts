@@ -50,7 +50,7 @@ export class CategoriesController {
   }
 
   @ApiOkResponse({
-    description: 'Get a product',
+    description: 'Get a category',
     schema: {
       $ref: getSchemaPath(Category)
     }
@@ -61,7 +61,7 @@ export class CategoriesController {
   }
 
   @ApiOkResponse({
-    description: 'Get a product',
+    description: 'Update a category',
     schema: {
       type: 'object'
     }
@@ -72,7 +72,7 @@ export class CategoriesController {
   }
      
   @ApiOkResponse({
-    description: 'Delete a product',
+    description: 'Delete a category',
     schema: {
       type: 'object'
     }
