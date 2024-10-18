@@ -38,7 +38,7 @@ export class ProductsController {
   }
 
   @ApiResponse({
-    description: 'The product records',
+    description: 'The products record',
     schema: {
       $ref: getSchemaPath(PaginatedResponseDto)
     }
