@@ -39,7 +39,7 @@ export class CategoriesController {
   }
 
   @ApiOkResponse({
-    description: 'The category records',
+    description: 'The categories record',
     schema: {
       $ref: getSchemaPath(PaginatedResponseDto)
     }
