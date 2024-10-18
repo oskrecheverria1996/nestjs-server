@@ -10,11 +10,6 @@ pipeline {
     }
     
     stages {
-        stage("Clonando repositorio"){
-            steps {
-                git "https://github.com/oskrecheverria1996/nestjs-server.git"
-            }
-        }
         stage("Instalando dependencias"){
             steps {
                 bat "npm install"
