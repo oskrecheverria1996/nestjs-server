@@ -29,8 +29,8 @@ pipeline {
                 credentialsId: DOCKERHUB_CREDENTIALS_ID,
                 passwordVariable: 'DOCKERHUB_PASSWORD',
                 usernameVariable: 'DOCKERHUB_USERNAME')]){
-                    sh 'docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}'
-                    sh 'docker push ${DOCKERHUB_REGISTRY}:${BUILD_NUMBER}'
+                    bat 'docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}'
+                    bat 'docker push ${DOCKERHUB_REGISTRY}:${BUILD_NUMBER}'
                 }
             }
         }
