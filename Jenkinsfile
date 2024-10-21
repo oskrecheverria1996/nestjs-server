@@ -8,12 +8,14 @@ pipeline {
     stages {
         stage("Instalando dependencias"){
             steps {
-                bat "npm install"
+                sh "npm install"
             }
         }
-        stage("Build"){
+        stage("Build docker image"){
             steps {
-                bat "npm run build"
+                script {
+                    sh "docker build -t nest-app ."
+                }
             }
         }
     }
