@@ -7,13 +7,14 @@ pipeline {
     
     stages {
 
-        environment {
-            DOCKERHUB_REGISTRY = 'oscarecheverria1996/nest-app'
-            DOCKERHUB = credentials('dockerhub_credentials')
-        }
-
         stage('username/pasword dockerhub....'){
-             steps {
+            
+            environment {
+                DOCKERHUB_REGISTRY = 'oscarecheverria1996/nest-app'
+                DOCKERHUB = credentials('dockerhub_credentials')
+            }
+
+            steps {
                 bat 'echo "Dockerhub user is $DOCKERHUB_USR"'
                 bat 'echo "Dockerhub password is $DOCKERHUB_PSW"'
             }
