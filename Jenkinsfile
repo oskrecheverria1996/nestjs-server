@@ -23,16 +23,21 @@ pipeline {
                 }
             }
         }
-       stage('Login to Dockerhub') {
-        steps {
+        stage('Login to Dockerhub'){
+            steps {
                 bat "docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ${DOCKERHUB_CREDENTIALS_PSW}"
+            }
+       }
+       stage('Push image on Dockerhub'){
+            steps {
+                bat "docker push ${DOCKERHUB_REGISTRY}:latest"
             }
        }
     }
 
     post {
         always {
-        bat 'docker logout'
+            bat 'docker logout'
         }
     }
 }
