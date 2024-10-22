@@ -23,16 +23,6 @@ pipeline {
                 }
             }
         }
-        stage('Login to dockerhub'){
-            steps {
-                bat 'docker login -u oscarecheverria1996 -p dckr_pat_81zIos6CKMKuv5kdhHH5oz7-5GE'    
-            }
-        }
-        stage('Push image on dockerhub'){
-            steps {
-                bat 'docker push oscarecheverria1996/nest-app:latest'
-            }
-        }
     }
 
     post {
