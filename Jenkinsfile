@@ -7,7 +7,7 @@ pipeline {
     
     environment {
         DOCKERHUB_REGISTRY = 'oscarecheverria1996/nest-app'
-        DOCKERHUB_CREDENTIALS_ID = credentials('dockerhub_credentials')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub_credentials')
     }
     
     stages {
@@ -26,10 +26,10 @@ pipeline {
         stage('Push docker image'){
             steps {
                 withCredentials([usernamePassword(
-                credentialsId: DOCKERHUB_CREDENTIALS_ID,
-                passwordVariable: 'DOCKERHUB_PASSWORD',
-                usernameVariable: 'DOCKERHUB_USERNAME')]){
-                    bat 'docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}'
+                credentialsId: DOCKERHUB_CREDENTIALS,
+                passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW',
+                usernameVariable: 'DOCKERHUB_CREDENTIALS_USR')]){
+                    bat 'docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ${DOCKERHUB_CREDENTIALS_PSW}'
                     bat 'docker push ${DOCKERHUB_REGISTRY}:${BUILD_NUMBER}'
                 }
             }
