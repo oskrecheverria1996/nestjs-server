@@ -7,19 +7,6 @@ pipeline {
     
     stages {
 
-        stage('username/pasword dockerhub....'){
-            
-            environment {
-                DOCKERHUB_REGISTRY = 'oscarecheverria1996/nest-app'
-                DOCKERHUB = credentials('dockerhub_credentials')
-            }
-
-            steps {
-                bat 'echo "Dockerhub user is ${DOCKERHUB_USR}"'
-                bat 'echo "Dockerhub password is  ${DOCKERHUB_PSW}"'
-            }
-        }
-
         stage("Install dependencies"){
             steps {
                 bat "npm install"
@@ -32,13 +19,17 @@ pipeline {
                 }
             }
         }
-        stage('Push docker image'){
+        stage('Push docker image'){  
+            environment {
+                DOCKERHUB_REGISTRY = 'oscarecheverria1996/nest-app'
+                DOCKERHUB = credentials('dockerhub_credentials')
+            }
             steps {
                 withCredentials([usernamePassword(
-                credentialsId: DOCKERHUB_CREDENTIALS,
-                passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW',
-                usernameVariable: 'DOCKERHUB_CREDENTIALS_USR')]){
-                    bat 'docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ${DOCKERHUB_CREDENTIALS_PSW}'
+                credentialsId: DOCKERHUB,
+                passwordVariable: 'DOCKERHUB_PSW',
+                usernameVariable: 'DOCKERHUB_USR')]){
+                    bat 'docker login -u ${DOCKERHUB_USR} -p ${DOCKERHUB_PSW}'
                     bat 'docker push ${DOCKERHUB_REGISTRY}:latest'
                 }
             }
