@@ -7,7 +7,7 @@ pipeline {
     
     environment {
         DOCKERHUB_REGISTRY = 'oscarecheverria1996/nest-app'
-        DOCKERHUB_CREDENTIALS_ID = 'dockerhub_credentials'
+        DOCKERHUB_CREDENTIALS_ID = credentials('dockerhub_credentials')
     }
     
     stages {
