@@ -22,23 +22,18 @@ pipeline {
         stage('Push docker image'){  
             environment {
                 DOCKERHUB_REGISTRY = 'oscarecheverria1996/nest-app'
-                DOCKERHUB = credentials('dockerhub_credentials')
             }
             steps {
-                withCredentials([usernamePassword(
-                credentialsId: DOCKERHUB,
-                passwordVariable: 'DOCKERHUB_PSW',
-                usernameVariable: 'DOCKERHUB_USR')]){
-                    bat 'docker login -u ${DOCKERHUB_USR} -p ${DOCKERHUB_PSW}'
+                script {
                     bat 'docker push ${DOCKERHUB_REGISTRY}:latest'
                 }
             }
         }
     }
+}
 
-    post {
-        always {
-        bat 'docker logout'
-        }
+post {
+    always {
+    bat 'docker logout'
     }
 }
