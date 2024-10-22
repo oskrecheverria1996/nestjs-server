@@ -32,9 +32,6 @@ pipeline {
             }
         }
         stage('Push docker image'){
-            script {
-                
-            }
             steps {
                 withCredentials([usernamePassword(
                 credentialsId: DOCKERHUB_CREDENTIALS,
