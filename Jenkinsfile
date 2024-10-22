@@ -19,7 +19,7 @@ pipeline {
         stage("Build docker image"){
             steps {
                 script {
-                    bat "docker build -t nest-app ."
+                    bat "docker build -t oscarecheverria1996/nest-app ."
                 }
             }
         }
