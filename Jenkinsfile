@@ -25,7 +25,7 @@ pipeline {
             }
             steps {
                 script {
-                    bat 'docker push ${DOCKERHUB_REGISTRY}:latest'
+                    bat 'docker push oscarecheverria1996/nest-app:latest'
                 }
             }
         }
