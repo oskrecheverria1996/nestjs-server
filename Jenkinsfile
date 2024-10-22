@@ -30,7 +30,6 @@ pipeline {
                 passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW',
                 usernameVariable: 'DOCKERHUB_CREDENTIALS_USR')]){
                     bat "docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ${DOCKERHUB_CREDENTIALS_PSW}"
-                    bat "docker push ${DOCKERHUB_REGISTRY}:latest"
                 }
             }
        }
