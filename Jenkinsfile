@@ -15,8 +15,8 @@ pipeline {
             }
 
             steps {
-                bat 'echo "Dockerhub user is $DOCKERHUB_USR"'
-                bat 'echo "Dockerhub password is $DOCKERHUB_PSW"'
+                bat 'echo "Dockerhub user is ${DOCKERHUB_USR}"'
+                bat 'echo "Dockerhub password is  ${DOCKERHUB_PSW}"'
             }
         }
 
