@@ -8,12 +8,14 @@ import { PageService } from 'src/shared/page/page.service';
 import { JwtService } from '@nestjs/jwt';
 import { PaginationDto } from 'src/shared/dto/pagination.dto';
 import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
+import { NotificationsGateway } from 'src/notifications/notifications.gateway';
 
 @Injectable()
 export class ProductsService {
 
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
+    private notificationsGateway: NotificationsGateway,
     private jwtService: JwtService) {}
 
   async create(createProductDto: CreateProductDto, user: string): Promise<Product> {
@@ -26,7 +28,9 @@ export class ProductsService {
     const product = await this.productModel.create({
       user: userId,
       ...createProductDto
-    })
+    });
+
+    this.notificationsGateway.emitNotification('Alguien ha creado un producto')
 
     return product;
   }

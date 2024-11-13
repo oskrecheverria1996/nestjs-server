@@ -8,6 +8,7 @@ import { PaginationDto } from 'src/shared/dto/pagination.dto';
 import { Product } from './entities/product.schema';
 import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
 import { ErrorResponseDto } from 'src/shared/dto/error-response.dto';
+import { NotificationsGateway } from 'src/notifications/notifications.gateway';
 
 @ApiTags('products')
 @ApiExtraModels(PaginatedResponseDto, ErrorResponseDto, Product)

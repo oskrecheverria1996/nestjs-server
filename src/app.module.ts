@@ -7,6 +7,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { ProductsModule } from './products/products.module';
 import { PageService } from './shared/page/page.service';
 import { CategoriesModule } from './categories/categories.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CategoriesModule } from './categories/categories.module';
     MongooseModule.forRoot(process.env.MONGO_URL),
     ProductsModule,
     CategoriesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [
