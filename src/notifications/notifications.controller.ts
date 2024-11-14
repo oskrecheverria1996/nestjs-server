@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { ApiBadRequestResponse, ApiExtraModels, ApiResponse, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from '@nestjs/swagger';
 import { Notification } from './entities/notification.schema';
 import { NotificationEntity } from './entities/notification.entity';
 import { ErrorResponseDto } from 'src/shared/dto/error-response.dto';
+import { AuthGuard } from 'src/auth/guards/auth/auth.guard';
 
 @ApiTags('notifications')
 @Controller('notifications')
@@ -18,12 +19,13 @@ import { ErrorResponseDto } from 'src/shared/dto/error-response.dto';
     $ref: getSchemaPath(ErrorResponseDto)
   }
 })
+@UseGuards(AuthGuard)
 export class NotificationsController {
 
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @ApiResponse({
-    description: 'The products record',
+    description: 'The notifications record',
     schema: {
       $ref: getSchemaPath(Array<NotificationEntity>)
     }
@@ -33,6 +35,19 @@ export class NotificationsController {
     return this.notificationsService.findAllNotifications();
   }
 
+  
+  @ApiResponse({
+    description: 'Not read notifications number',
+    schema: {
+      $ref: getSchemaPath(Array<NotificationEntity>)
+    }
+  })
+  @Get('notReadNotifications')
+  async getNotReadNotifications(): Promise<Notification[]>  {
+    const [total, notifications] = await this.notificationsService.getNotReadNotifications();
+    return notifications;
+  }
+
   @ApiResponse({
     description: 'Update notification state',
     schema: {
@@ -40,8 +55,8 @@ export class NotificationsController {
     }
   })
   @Patch()
-  updateNotifications(@Body() notificationsCollection: Notification[]) {
-    return this.notificationsService.updateNotificationsList(notificationsCollection)
+  updateNotifications() {
+    return this.notificationsService.updateNotificationsList()
   }
 
 

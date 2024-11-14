@@ -5,17 +5,22 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './entities/category.entity';
 import { Model } from 'mongoose';
 import { PaginationDto } from 'src/shared/dto/pagination.dto';
+import { NotificationsGateway } from 'src/notifications/notifications.gateway';
 
 @Injectable()
 export class CategoriesService {
 
   constructor(
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
+    private notificationsGateway: NotificationsGateway,
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
     const existCategory = await this.categoryModel.findOne({name: createCategoryDto.name });
     if(existCategory) throw new BadRequestException('Una categoria con este nombre ya se encuentra registrada');
+
+    // Notification to emit
+    this.notificationsGateway.emitNotification('Se ha creado una categoria');
 
     const category = this.categoryModel.create(createCategoryDto)
     return category;
@@ -64,6 +69,10 @@ export class CategoriesService {
 
     try {
       await category.updateOne(updateCategoryDto);
+      
+      // Notification to emit
+      this.notificationsGateway.emitNotification('Se ha actualizado una categoria');
+
       return {
         ...category.toJSON(),
         ...updateCategoryDto
@@ -81,6 +90,10 @@ export class CategoriesService {
     try {
       
       await this.categoryModel.deleteOne({ _id: id })
+      
+      // Notification to emit
+      this.notificationsGateway.emitNotification('Se ha eliminado una categoria');
+
       return { message: `Category with id: ${id} was removed`};
 
     } catch (error) {

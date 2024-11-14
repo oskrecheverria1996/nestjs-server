@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Notification, NotificationDocument } from './entities/notification.schema';
 import { Model } from 'mongoose';
 import { map } from 'rxjs';
+import { NotificationEntity } from './entities/notification.entity';
 
 @Injectable()
 export class NotificationsService {
@@ -39,10 +40,13 @@ export class NotificationsService {
     }
   }
 
-  async updateNotificationsList(notificationsList) {
-    const idList = notificationsList.map(x => x.id);
+  async updateNotificationsList() {
     try {
-      const notifications = await this.notificationModel.updateMany();
+      const notifications = await this.notificationModel.updateMany(
+        { isRead: false },
+        { $set: { isRead: true } },
+        { multi: true }
+      );
       return notifications;
       
     } catch (error) {

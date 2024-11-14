@@ -30,7 +30,8 @@ export class ProductsService {
       ...createProductDto
     });
 
-    this.notificationsGateway.emitNotification('Alguien ha creado un producto')
+    // Notification to emit
+    this.notificationsGateway.emitNotification('Se ha creado un producto');
 
     return product;
   }
@@ -81,6 +82,10 @@ export class ProductsService {
 
     try {
       await product.updateOne(updateProductDto);
+      
+      // Notification to emit
+      this.notificationsGateway.emitNotification('Se ha actualizado un producto');
+
       return {
         ...product.toJSON(),
         ...updateProductDto
@@ -98,6 +103,10 @@ export class ProductsService {
     try {
       
       await this.productModel.deleteOne({ _id: id })
+
+      // Notification to emit
+      this.notificationsGateway.emitNotification('Se ha eliminado un producto');
+
       return { message: `Product with id: ${id} was removed`};
 
     } catch (error) {
