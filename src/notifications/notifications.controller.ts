@@ -26,9 +26,7 @@ export class NotificationsController {
 
   @ApiResponse({
     description: 'The notifications record',
-    schema: {
-      $ref: getSchemaPath(Array<NotificationEntity>)
-    }
+    type: [NotificationEntity]
   })
   @Get()
   allNotifications(): Promise<Notification[]> {
@@ -38,9 +36,7 @@ export class NotificationsController {
   
   @ApiResponse({
     description: 'Not read notifications number',
-    schema: {
-      $ref: getSchemaPath(Array<NotificationEntity>)
-    }
+    type: [NotificationEntity]
   })
   @Get('notReadNotifications')
   async getNotReadNotifications(): Promise<Notification[]>  {
