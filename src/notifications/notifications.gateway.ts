@@ -33,6 +33,16 @@ export class NotificationsGateway implements OnModuleInit, OnGatewayConnection, 
   @SubscribeMessage('sendNotification')
   async emitNotification(@MessageBody() message: string) {
     let total = await this.notificationsService.saveNotification({message});
+    this.notificationEmit(total);
+  }
+
+  @SubscribeMessage('requestNotification')
+  async requestNotifications() {
+    let [ total ] = await this.notificationsService.getNotReadNotifications();
+    this.notificationEmit(total);
+  }
+
+  notificationEmit(total) {
     this.server.emit('sendNotification', total)
   }
   

@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Query, UseGuards } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
-import { ApiBadRequestResponse, ApiExtraModels, ApiResponse, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiExtraModels, ApiResponse, ApiTags, ApiUnauthorizedResponse, getSchemaPath, ApiBody } from '@nestjs/swagger';
 import { Notification } from './entities/notification.schema';
 import { NotificationEntity } from './entities/notification.entity';
 import { ErrorResponseDto } from 'src/shared/dto/error-response.dto';
 import { AuthGuard } from 'src/auth/guards/auth/auth.guard';
+import { PaginationDto } from 'src/shared/dto/pagination.dto';
+import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
 
 @ApiTags('notifications')
 @Controller('notifications')
@@ -26,11 +28,13 @@ export class NotificationsController {
 
   @ApiResponse({
     description: 'The notifications record',
-    type: [NotificationEntity]
+    schema: {
+      $ref: getSchemaPath(PaginatedResponseDto)
+    }
   })
   @Get()
-  allNotifications(): Promise<Notification[]> {
-    return this.notificationsService.findAllNotifications();
+  allNotifications(@Query() paginationDto: PaginationDto): Promise<PaginatedResponseDto<Notification>> {
+    return this.notificationsService.findAllNotifications(paginationDto);
   }
 
   
@@ -51,8 +55,8 @@ export class NotificationsController {
     }
   })
   @Patch()
-  updateNotifications() {
-    return this.notificationsService.updateNotificationsList()
+  async updateNotifications() {
+    return await this.notificationsService.updateNotificationsList()
   }
 
 

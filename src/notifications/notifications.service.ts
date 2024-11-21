@@ -6,6 +6,8 @@ import { Notification, NotificationDocument } from './entities/notification.sche
 import { Model } from 'mongoose';
 import { map } from 'rxjs';
 import { NotificationEntity } from './entities/notification.entity';
+import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
+import { PaginationDto } from 'src/shared/dto/pagination.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -30,10 +32,30 @@ export class NotificationsService {
     } 
   }
 
-  async findAllNotifications(): Promise<Notification[]> {
+  async findAllNotifications(paginationDto: PaginationDto): Promise<PaginatedResponseDto<Notification>> {
+
+    const { page = 1, limit = 10} = paginationDto;
+    
     try {
-      const notifications = await this.notificationModel.find();
-      return notifications;
+
+      const [total, notifications] = await Promise.all([
+        this.notificationModel.countDocuments(),
+
+        this.notificationModel.find().sort({date: -1})
+        .skip( (page - 1) * limit )
+        .limit(limit)
+      ]);
+      
+      return {
+        page: {
+          number: page,
+          limit,
+          total,
+          next: `/api/products?page=${page + 1}&limit=${limit}`,
+          prev: (page - 1 > 0) ? `/api/products?page=${ page - 1 }&limit=${limit}` : null,
+        },
+        content: notifications
+      };
       
     } catch (error) {
       throw new InternalServerErrorException();
@@ -60,7 +82,7 @@ export class NotificationsService {
       const [total, notifications] = await Promise.all([
         this.notificationModel.countDocuments(query),
 
-        this.notificationModel.find(query)
+        this.notificationModel.find(query).sort({date: -1})
       ]);
 
       return [total, notifications];

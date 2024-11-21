@@ -18,6 +18,6 @@ export class PaginationDto {
     page?: number;
 
     @ApiProperty()
-    @IsOptional()
-    search?: string
+    @IsOptional({always: true})
+    search: string
 }
